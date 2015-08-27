@@ -55,13 +55,13 @@ def send(strSubject, content, opt = ''):
     #'rsrs \r\n' + 
     '.'))
     smtp.quit()
-    print mesg
+    #print mesg
     logFile.write(mesg)
     logFile.close()
     return True
   except Exception, e:
     mesg += 'exception :' + str(e)
-    print mesg
+    #print mesg
     logFile.write(mesg)
     logFile.close()
     return False

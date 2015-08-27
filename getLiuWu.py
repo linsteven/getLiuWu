@@ -10,9 +10,7 @@ import sendWu
 sendWu.informMyself('程序启动')
 while True :
   date = time.strftime('%Y%m%d',time.localtime(time.time()))
-  logFile = open('./tmp/getBoth_' + date + '.txt','a')
-  #logFile.close()
-  #logFile = open('./tmp/getBoth_' + date + '.txt','r')
+  logFile = open('./log/getBoth_' + date + '.txt','a')
   hour = time.localtime().tm_hour
   minute = time.localtime().tm_min
   logFile.write(str(hour) + ':' + str(minute) + '\n')
@@ -20,7 +18,7 @@ while True :
   enterLiu = False
   if hour == 6 :
     enterLiu = True
-    logFile = open('./tmp/getBoth_' + date + '.txt','a')
+    logFile = open('./log/getBoth_' + date + '.txt','a')
     logFile.write('\n\n\nEnterLiu\n\n')
     logFile.close()
     sendWu.informMyself('开始大刘')
@@ -42,7 +40,7 @@ while True :
         time.sleep(8)
       h = time.localtime().tm_hour
       m = time.localtime().tm_min
-      logFile = open('./tmp/getBoth_' + date + '.txt','a')
+      logFile = open('./log/getBoth_' + date + '.txt','a')
       logFile.write(str(h) + ':' + str(m))
       if h == 9 and enterWu is False :
         enterWu = True

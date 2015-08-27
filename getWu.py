@@ -151,8 +151,8 @@ def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
   
 
 def run():
-  #url = getTodayUrl.getUrl()  #url of wu's blog
-  url = 'http://blog.sina.com.cn/s/blog_48874cec0102vvwy.html'
+  url = getTodayUrl.getUrl()  #url of wu's blog
+  #url = 'http://blog.sina.com.cn/s/blog_48874cec0102vvwy.html'
   if url == '' :
     return
   #latestDeal = '暂无'

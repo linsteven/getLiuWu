@@ -49,13 +49,13 @@ def send(strSubject, content) :
     #'rsrs \r\n' + 
     '.'))
     smtp.quit()
-    print mesg
+    #print mesg
     logFile.write(mesg)
     logFile.close()
     return True
   except Exception, e:
     mesg += 'exception :' + str(e)
-    print mesg
+    #print mesg
     logFile.write(mesg)
     logFile.close()
     return False
@@ -67,9 +67,9 @@ def test() : #testAmount
    count += 1
    if count >100 :
      break
-   print 'count = ' + str(count)
-   print time.localtime().tm_hour, ':', time.localtime().tm_min
-   print '\n\n'
+   #print 'count = ' + str(count)
+   #print time.localtime().tm_hour, ':', time.localtime().tm_min
+   #print '\n\n'
    time.sleep(random.randint(5,20))
 
 #test()
