@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 
 
-def send(strSubject, content):
+def send(strSubject, content, opt = ''):
 #strSubject = '测试邮件功能'
 #content = 'this is a test'
 #if True :
@@ -35,13 +35,17 @@ def send(strSubject, content):
     mesg += '\n' + str(smtp.docmd(username))
     mesg += '\n' + str(smtp.docmd(password))
     mesg += '\n' + str(smtp.docmd('mail from:','<linsgrabstock@yeah.net>'))
-    for usermail in emails :
-      usermail = usermail.strip()
-      #if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$",  email) != None :
-      #  print 'yes'
-      usermail = '<' + usermail + '>'
-      mesg += '\n' + str(smtp.docmd('rcpt to:', usermail))
-      mesg += '\n' + 'send to ' + usermail 
+    if len(opt) == 0:
+      for usermail in emails :
+        usermail = usermail.strip()
+        #if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$",  email) != None :
+        #  print 'yes'
+        usermail = '<' + usermail + '>'
+        mesg += '\n' + str(smtp.docmd('rcpt to:', usermail))
+    else :
+      usermail = '<1656758436@qq.com>'
+      mesg +=  '\n' + str(smtp.docmd('rcpt to:', usermail))
+    mesg += '\n' + 'send to ' + usermail 
     mesg += '\n' + str(smtp.docmd('data'))
     mesg += '\n' + str(smtp.docmd('from: linsgrabstock@yeah.net\r\n' + 
     'to: receiver@qq.com\r\n' + 
@@ -62,17 +66,21 @@ def send(strSubject, content):
     logFile.close()
     return False
 
+def informMyself(mesg) :
+  send(mesg, mesg, 'send to myself')
+
 def test() : #testAmount
   count = 0
-  while True :
-    send('测试邮箱容量' + str(count), 'this is a simple test. No.')
+  #while True :
+  if True :
+    send('getLiuWu正式启动' + str(count), 'getLiuWu程序已启动')
     count += 1
-    if count >100 :
-      break
-    print 'count = ' + str(count)
-    print time.localtime().tm_hour, ':', time.localtime().tm_min
-    print '\n\n'
-    time.sleep(random.randint(5,20))
+    #if count >100 :
+     # break
+    #print 'count = ' + str(count)
+    #print time.localtime().tm_hour, ':', time.localtime().tm_min
+    #print '\n\n'
+    #time.sleep(random.randint(5,20))
 
 #test()
 

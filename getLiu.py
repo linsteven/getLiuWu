@@ -168,10 +168,10 @@ def getNewWeibo(sendedLst) :
 #1、打开程序，读取文件sended_08.txt，（08表示月份）初始化sendedLst，最多append10个，最少0个。
 #2、每隔10s获取一次数据，分析是否有更新，有则发送，并更新sendedLst以及文件sended_08.txt
 
-def init() :
+def init(date) :
   reload(sys)
   sys.setdefaultencoding('utf8') #'ascii' codec can't decode byte 0xe5 in position
-  date = time.strftime('%Y%m%d',time.localtime(time.time()))
+  #date = time.strftime('%Y%m%d',time.localtime(time.time()))
   sendedFile = open('./tmp/sendedLiu_' + date + '.txt','a')
   sendedFile.close()
   sendedFile = open('./tmp/sendedLiu_' + date + '.txt','r')
@@ -183,22 +183,18 @@ def init() :
     sendedLst.append(lines[i].strip('\n'))
   return sendedLst
 
-def runOnce(sendedLst) :
-  date = time.strftime('%Y%m%d',time.localtime(time.time()))
-  curtime = time.strftime('%H:%M:%S',time.localtime(time.time()))
-  print '1: ' + curtime
+def runOnce(sendedLst, date) :
   logfile = open('./log/getDaLiu_' + date + '.log', 'a')
   weibo = getNewWeibo(sendedLst)
-  print 'get New ok!' + curtime
+  curtime = time.strftime('%H:%M:%S',time.localtime(time.time()))
+  logfile.write('get New ok!' + curtime + '\n')
   if len(weibo) > 0 :
-    print 'New weibo: ' + weibo
+    #print 'New weibo: ' + weibo
     logfile.write('New weibo :' + weibo + '\n' + date + ' ' + curtime + '\n')
     sendLiu.send('大刘微博直播', weibo) 
   else :
     logfile.write('None!\n' + date + ' ' + curtime + '\n')
   logfile.close()
-  curtime = time.strftime('%H:%M:%S',time.localtime(time.time()))
-  print '2: ' + curtime
   time.sleep(3)
 
 def run() :

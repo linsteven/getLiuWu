@@ -26,7 +26,7 @@ def getUrl() :
   for line in lines :
     if '''<div class="articleCell SG_j_linedot1">''' in line :
       numlst.append(i)
-      if len(numlst) == 15 :
+      if len(numlst) == 20 :
         break
     i += 1
   #have found 10 articles
@@ -35,7 +35,7 @@ def getUrl() :
   title = str(month) +'月' + str(day) + '日即时' 
   goodline = ''
   flag = False
-  for k in range(0, 15) :
+  for k in range(0, 20) :
     num = numlst[k] + 4
     if title in lines[num] :
       goodline = lines[num]
