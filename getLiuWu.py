@@ -3,24 +3,25 @@ import getLiu
 import getWu
 import time
 import sendWu
-
+import getTodayUrl
 
 
 
 sendWu.informMyself('程序启动')
 while True :
   date = time.strftime('%Y%m%d',time.localtime(time.time()))
-  logFile = open('./log/getBoth_' + date + '.txt','a')
+  logFile = open('./log/getBoth_' + date + '.log','a')
   hour = time.localtime().tm_hour
   minute = time.localtime().tm_min
   logFile.write(str(hour) + ':' + str(minute) + '\n')
   logFile.close()
   enterLiu = False
-  if hour == 6 :
+  if hour == 8 :
     enterLiu = True
-    logFile = open('./log/getBoth_' + date + '.txt','a')
+    logFile = open('./log/getBoth_' + date + '.log','a')
     logFile.write('\n\n\nEnterLiu\n\n')
     logFile.close()
+    #print 'enter liu'
     sendWu.informMyself('开始大刘')
     #init getLiu
     liuSendedLst = getLiu.init(date)
@@ -40,8 +41,9 @@ while True :
         time.sleep(8)
       h = time.localtime().tm_hour
       m = time.localtime().tm_min
-      logFile = open('./log/getBoth_' + date + '.txt','a')
-      logFile.write(str(h) + ':' + str(m))
+      logFile = open('./log/getBoth_' + date + '.log','a')
+      logFile.write(str(h) + ':' + str(m) + '\n')
+      #print str(h) + ':' + str(m) + '\n'
       if h == 9 and enterWu is False :
         enterWu = True
         logFile.write('\n\n\nEnterWu\n\n')

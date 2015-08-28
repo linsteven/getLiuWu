@@ -184,7 +184,7 @@ def init(date) :
   return sendedLst
 
 def runOnce(sendedLst, date) :
-  logfile = open('./log/getDaLiu_' + date + '.log', 'a')
+  logfile = open('./log/getLiu_' + date + '.log', 'a')
   weibo = getNewWeibo(sendedLst)
   curtime = time.strftime('%H:%M:%S',time.localtime(time.time()))
   logfile.write('get New ok!' + curtime + '\n')
@@ -195,7 +195,7 @@ def runOnce(sendedLst, date) :
   else :
     logfile.write('None!\n' + date + ' ' + curtime + '\n')
   logfile.close()
-  time.sleep(3)
+  #time.sleep(3)
 
 def run() :
   sendedLst = init()
