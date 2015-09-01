@@ -15,9 +15,9 @@ listUrl = "http://blog.sina.com.cn/s/articlelist_1216826604_0_1.html"
 
 def getUrl() :
 #if True :
-  print 'enter getUrl()'
+  #print 'enter getUrl()'
   page = urllib.urlopen(listUrl)
-  print 'after open'
+  #print 'after open'
   html = page.read()
   lines= html.split('\n')
   #print len(lines)
@@ -46,7 +46,7 @@ def getUrl() :
     pos = goodline.find('''href="''')
     goodline = goodline[pos+6:]
     url = goodline.split('''">''')[0]
-    print 'Today\'s url :' + url
+    #print 'Today\'s url :' + url
   return url
 
 #print getUrl()

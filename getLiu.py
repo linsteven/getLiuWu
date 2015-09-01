@@ -5,14 +5,36 @@ import re
 import time
 import codecs
 import sendLiu
+import sendWu
+import socket
+
+socket.setdefaulttimeout(5)
 
 def getHtml(url) :
-  page = urllib.urlopen(url)
-  html = page.read()
+  #print 'gethtml 1'
+  html = ''
+  try :
+    page = urllib.urlopen(url)
+    #print 'gethtml 2'
+    html = page.read()
+    #print 'gethtml 3'
+  except IOError, e : #socket.error:
+    errno,errstr = sys.exc_info()[:2]
+    logfile = open('./log/getLiu_error.log', 'a')
+    logfile.write('error: ' + str(e) + '\n')
+    if errno == socket.timeout :
+      logfile.write('There was a timeout\n')
+    else :
+      logfile.write('Some other socket error\n')
+    logfile.close()
+
   return html
 
 def getWeibo() :
+  weiboLst = list()
   weibos = getHtml('http://www.imaibo.net/index.php?app=home&mod=Space&act=getSpaceWeibo300&uid=1954702')
+  if weibos == '' :
+    return weiboLst
   lines = weibos.split('\u')
   content = ''
   for word in lines : #转unicode为中文
@@ -28,7 +50,6 @@ def getWeibo() :
   #f = codecs.open('1.txt', 'w', 'utf-8')
   #f.close()
   #f = codecs.open('1.txt', 'a', 'utf-8')
-  weiboLst = list()
   for line in content.split('</div>') :
     if len(line) > 0 :
       #f.write(line)
@@ -110,7 +131,7 @@ def combine() :
       else : #没有原文，非转发，单条微博
         weibo += '(' + lst[i+1] + ')'
         i += 1
-      print i, weibo
+      #print i, weibo
       weibos.append(weibo)
   return weibos
 
@@ -121,7 +142,10 @@ def getNewWeibo(sendedLst) :
   weibo = ''
   hasNew = False
   cur = ''
+  date = ''
+  #print 'in  getNew'
   for i in range(12 if length > 12 else length):
+    #print 'in getNew for :' + str(i)
     if u'[刘鹏程' in lst[i] :
       cur = lst[i]
       weibo = ''
@@ -149,6 +173,9 @@ def getNewWeibo(sendedLst) :
         sendedFile.write(cur + '\n')
         sendedFile.close()
         break  #一次假设只有一条更新，即10秒内大刘不会发两条微博
+  if hasNew :
+    logfile = open('./log/getLiu_' + date + '.log', 'a')
+    logfile.write('hasNew is True:' + weibo + '\n')
   if hasNew and '秒前' in weibo: # 满足刚刚更新的放进，不满足则添加进sended 文件
     return weibo
   else :
@@ -185,22 +212,27 @@ def init(date) :
 
 def runOnce(sendedLst, date) :
   logfile = open('./log/getLiu_' + date + '.log', 'a')
+  print 'to get New'
   weibo = getNewWeibo(sendedLst)
   curtime = time.strftime('%H:%M:%S',time.localtime(time.time()))
+  print 'get new Ok: ' + weibo + ' ' + curtime
   logfile.write('get New ok!' + curtime + '\n')
   if len(weibo) > 0 :
-    #print 'New weibo: ' + weibo
+    print 'New weibo: ' + weibo
     logfile.write('New weibo :' + weibo + '\n' + date + ' ' + curtime + '\n')
     sendLiu.send('大刘微博直播', weibo) 
   else :
     logfile.write('None!\n' + date + ' ' + curtime + '\n')
+    print 'None'
   logfile.close()
   #time.sleep(3)
 
 def run() :
-  sendedLst = init()
+  date = time.strftime('%Y%m%d',time.localtime(time.time()))
+  sendedLst = init(date)
   while True : #无限循环
-    runOnce(sendedLst)
+    runOnce(sendedLst, date)
+    time.sleep(10)
 
 
 #run()

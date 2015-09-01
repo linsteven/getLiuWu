@@ -1,15 +1,34 @@
 #coding=utf-8
+import sys
 import urllib
 import re
 import time
 import sendWu
 import getTodayUrl
+import socket
+
+socket.setdefaulttimeout(5)
 
 def getMesg(url) :
-  page = urllib.urlopen(url)
-  html = page.read()
-  lines = html.split('\n')
+  html = ''
   lst = list()
+  try :
+   #print 'wuget 1'
+    page = urllib.urlopen(url)
+   #print 'wuget 2'
+    html = page.read()
+   #print 'wuget 3'
+  except IOError,e :
+    errno,errstr = sys.exc_info()[:2]
+    logfile = open('./log/getWu_error.log', 'a')
+    if errno == socket.timeout:
+      logfile.write('There was a timeout\n')
+    else :
+      logfile.write('Some other socket error\n')
+      
+  if html == '':
+    return lst
+  lines = html.split('\n')
   start = 0
   end = 0
   findStart = False
@@ -76,7 +95,7 @@ def output(newLst, deaLst, latestDeal, refreshTime) :
   #今日分析
   print '今日分析：\n'
   for line in newLst :
-    print line
+   print line
   print sep1
   #today's deals
   print '今日交易：'
@@ -101,14 +120,18 @@ def init(date) :
   return wuSendedLst
 
 def runEnd(url):
+  if url == '' :
+    return
   newLst = getMesg(url)
   sendEmail(newLst)
 
 def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
   if url == '':
-    return 
+    return
   logFile = open('./log/getWu_' + date + '.log', 'a')
+ #print 'to getmesg'
   newLst = getMesg(url)
+ #print 'get ok'
   if len(newLst) > len(oldLst) :
     oldLen = len(oldLst)
     newLen = len(newLst)
@@ -143,10 +166,11 @@ def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
     latestDeal = '暂无' #only show the deal in 30 minutes
   #refresh time
   refreshTime =  "\n更新时间: " + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-  output(newLst, wuSendedLst, latestDeal, refreshTime)
+  #output(newLst, wuSendedLst, latestDeal, refreshTime)
   logFile.write(refreshTime + '')
   logFile.write('-----------------\n')
   #time.sleep(10)
+  #output(newLst, wuSendedLst, latestDeal, refreshTime) 
   logFile.close()
   
 
@@ -155,12 +179,13 @@ def run():
   #url = 'http://blog.sina.com.cn/s/blog_48874cec0102vvwy.html'
   if url == '' :
     return
-  #latestDeal = '暂无'
-  #oldLst = list()
+  latestDeal = '暂无'
+  oldLst = list()
   date = time.strftime('%Y%m%d', time.localtime(time.time()))
   wuSendedLst = init(date) # deaLst
   while True :
-    runOnce(url, date, wuSendedLst)
+    runOnce(url, date, wuSendedLst, latestDeal, oldLst)
+    time.sleep(10)
 
 #run()
 

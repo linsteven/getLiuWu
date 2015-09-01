@@ -39,7 +39,7 @@ def send(strSubject, content, opt = ''):
       for usermail in emails :
         usermail = usermail.strip()
         #if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$",  email) != None :
-        #  print 'yes'
+        #  rint 'yes'
         usermail = '<' + usermail + '>'
         mesg += '\n' + str(smtp.docmd('rcpt to:', usermail))
     else :

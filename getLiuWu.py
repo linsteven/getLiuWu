@@ -6,6 +6,11 @@ import sendWu
 import getTodayUrl
 
 
+startLiuHour = 7
+stopLiuHour = 19
+startWuHour = 9
+stopWuHour = 15
+stopWuMinute = 10
 
 sendWu.informMyself('程序启动')
 while True :
@@ -14,9 +19,12 @@ while True :
   hour = time.localtime().tm_hour
   minute = time.localtime().tm_min
   logFile.write(str(hour) + ':' + str(minute) + '\n')
+  #print str(hour) + ':' + str(minute)
+  #print 'in first while'
+  logFile.write('in 1st while\n')
   logFile.close()
   enterLiu = False
-  if hour == 8 :
+  if hour == startLiuHour :
     enterLiu = True
     logFile = open('./log/getBoth_' + date + '.log','a')
     logFile.write('\n\n\nEnterLiu\n\n')
@@ -44,22 +52,33 @@ while True :
       logFile = open('./log/getBoth_' + date + '.log','a')
       logFile.write(str(h) + ':' + str(m) + '\n')
       #print str(h) + ':' + str(m) + '\n'
-      if h == 9 and enterWu is False :
+      logFile.write('in 2nd while\n')
+      if h == startWuHour and enterWu is False :
         enterWu = True
         logFile.write('\n\n\nEnterWu\n\n')
         sendWu.informMyself('开始wu2198')
+      #print '1'
+      logFile.write('1\n')
       if enterWu :
         getWu.runOnce(url, date, wuSendedLst, latestDeal, oldLst)
         time.sleep(3)
-      if h == 15 and m == 10 and not wuIsEnd:
+      #print '2'
+      logFile.write('2\n')
+      if h == stopWuHour and m == stopWuMinute and not wuIsEnd:
         enterWu = False
         getWu.runEnd(url)
         wuIsEnd = True
-      if h == 22 :
+        sendWu.informMyself('结束wu2198')
+      #print 3
+      logFile.write('3\n')
+      if h == stopLiuHour : # 22
         enterLiu = False
+        sendWu.informMyself('结束大刘')
+      #print 4
+      logFile.write('4\n')
       logFile.close()
     
-  time.sleep(60)
+  time.sleep(300)
 
 #sendedLst = getLiu.init()
 #while(True) :
