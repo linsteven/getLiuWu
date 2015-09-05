@@ -72,6 +72,7 @@ def isDeal(line) :
       re.match(r"^.*砍掉\d{1,2}%", line) or
       re.match(r"^.*出掉\d{1,2}%", line) or
       re.match(r"^.*减掉\d{1,2}%", line) or
+      re.match(r"^.*减出\d{1,2}%", line) or
       re.match(r"^.*挂中\d{1,2}%", line) or
       re.match(r"^.*成交\d{1,2}%", line) or
       re.match(r"^.*回补\d{1,2}%", line) ):
@@ -86,7 +87,7 @@ def sendEmail(newLst, latestDeal = '', subject = '今日及时分析_wu2198') :
     content = '新交易：' + latestDeal + ' \n\n' + '及时分析: ' + '\n' 
   for line in newLst :
     line = line.replace(' ', '  ') #扩大时间和内容间距离
-    content += line + '\n'
+    content += line + '\n\n'
   sendWu.send(subject, content)
 
 def output(newLst, deaLst, latestDeal, refreshTime) :
@@ -137,36 +138,57 @@ def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
     newLen = len(newLst)
     oldLst = newLst
     getNew = False
+    subject = 'wu2198直播更新'
     for i in range(oldLen-1, newLen-1) :
-      mesg = newLst[i]
-      logFile.write('\n\nNew Message : ' + mesg + '\n')
-      if isDeal(mesg) and mesg not in wuSendedLst :
-        getNew = True
-        latestDeal = mesg
-        wuSendedLst.append(mesg)
-        sendedFile = open('./tmp/sendedWu_' + date + '.txt','a')
-        sendedFile.write(mesg + '\n')
-        sendedFile.close()
-        logFile.write('New deal: ' + mesg + '\n')
-        ops = latestDeal.split(' ')
-        logFile.write('ops length = ' + str(len(ops)))
-        logFile.writelines(ops)
-    if getNew :
-      sendEmail( oldLst, latestDeal, ops[1])
+      #mesg = newLst[i]
+      #if isDeal(mesg) and mesg not in wuSendedLst : 
+      #  #can get the deal as soon as possible
+      #  getNew = True
+      #  latestDeal = mesg
+      #  wuSendedLst.append(mesg)
+      #  sendedFile = open('./tmp/sendedWu_' + date + '.txt','a')
+      #  sendedFile.write(mesg + '\n')
+      #  sendedFile.close()
+      #  logFile.write('New deal: ' + mesg + '\n')
+      #  ops = latestDeal.split(' ')
+      #  if len(ops) > 1 :
+      #    subject = ops[1]
+      #  #break
+      if '目前中短线仓位' in newLst[i] :
+        linenum = 0 
+        #if several deals occur at the same time, set the subject be the last deal
+        latestDeal = ''
+        for j in range(i-3,i) :
+          if re.match(r"^.*\d{1,2}%", newLst[j]) and newLst[j] not in wuSendedLst:
+            linenum = j
+            getNew = True
+            wuSendedLst.append(newLst[j])
+            latestDeal = latestDeal + newLst[j] + '\n'
+            sendedFile = open('./tmp/sendedWu_' + date + '.txt','a')
+            sendedFile.write(newLst[j] + '\n')
+            sendedFile.close()
+            logFile.write('New deal: ' + newLst[j] + '\n')
+        if linenum != 0 :
+          ops = newLst[linenum].split(' ')
+          if len(ops) > 1 :
+            subject = ops[1]
+        break
 
-  diff = 0
-  if latestDeal != '暂无' :
-    strs = latestDeal.split(' ')
-    times = strs[0].split(':')
-    hour =  time.localtime().tm_hour
-    minute = time.localtime().tm_min
-    diff = 50
-    #diff = hour * 60 + minute - int(times[0]) * 60 - int(times[1])
-  if diff > 30 :
-    latestDeal = '暂无' #only show the deal in 30 minutes
+    #if getNew :
+      #sendEmail( oldLst, latestDeal, ops[1])
+
+  #diff = 0
+  #if latestDeal != '暂无' :
+  #  strs = latestDeal.split(' ')
+  #  times = strs[0].split(':')
+  #  hour =  time.localtime().tm_hour
+  #  minute = time.localtime().tm_min
+  #  diff = 50
+  #  #diff = hour * 60 + minute - int(times[0]) * 60 - int(times[1])
+  #if diff > 30 :
+  #  latestDeal = '暂无' #only show the deal in 30 minutes
   #refresh time
   refreshTime =  "\n更新时间: " + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-  #output(newLst, wuSendedLst, latestDeal, refreshTime)
   logFile.write(refreshTime + '')
   logFile.write('-----------------\n')
   #time.sleep(10)
@@ -175,8 +197,8 @@ def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
   
 
 def run():
-  url = getTodayUrl.getUrl()  #url of wu's blog
-  #url = 'http://blog.sina.com.cn/s/blog_48874cec0102vvwy.html'
+  #url = getTodayUrl.getUrl()  #url of wu's blog
+  url = 'http://blog.sina.com.cn/s/blog_48874cec0102vwv6.html'
   if url == '' :
     return
   latestDeal = '暂无'

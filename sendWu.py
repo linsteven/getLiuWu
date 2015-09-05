@@ -20,7 +20,8 @@ def send(strSubject, content, opt = ''):
   username = base64.encodestring(username).strip() 
   password = base64.encodestring(password).strip() 
   date = time.strftime('%Y%m%d', time.localtime(time.time()))
-  userFile = open('userlistWu.txt','r')
+  userFile = open('userlistTest.txt','r')
+  #userFile = open('userlistWu.txt','r')
   mesg = '\nWu news\n\n'
   emails = userFile.readlines()
   userFile.close()
@@ -42,10 +43,11 @@ def send(strSubject, content, opt = ''):
         #  rint 'yes'
         usermail = '<' + usermail + '>'
         mesg += '\n' + str(smtp.docmd('rcpt to:', usermail))
+        mesg += '\n' + 'send to ' + usermail 
     else :
       usermail = '<1656758436@qq.com>'
       mesg +=  '\n' + str(smtp.docmd('rcpt to:', usermail))
-    mesg += '\n' + 'send to ' + usermail 
+      mesg += '\n' + 'send to ' + usermail 
     mesg += '\n' + str(smtp.docmd('data'))
     mesg += '\n' + str(smtp.docmd('from: linsgrabstock@yeah.net\r\n' + 
     'to: receiver@qq.com\r\n' + 
@@ -73,7 +75,7 @@ def test() : #testAmount
   count = 0
   #while True :
   if True :
-    send('getLiuWu正式启动' + str(count), 'getLiuWu程序已启动')
+    send('大刘微博更新以及wu交易提醒','如果您收到，明天应该就能收到大刘更新及wu交易提醒邮件了。谢谢')
     count += 1
     #if count >100 :
      # break

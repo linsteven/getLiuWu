@@ -52,7 +52,7 @@ def getWeibo() :
   #f = codecs.open('1.txt', 'a', 'utf-8')
   for line in content.split('</div>') :
     if len(line) > 0 :
-      #f.write(line)
+      #f.write(line + '\n')
       if u'刘鹏程SaiL直播' in line : #or re.match(r"^.*\d{2}:\d{2}.*$", line) :
         pos = line.find(u'[刘鹏程SaiL直播]')
         line = line[pos:]
@@ -212,18 +212,21 @@ def init(date) :
 
 def runOnce(sendedLst, date) :
   logfile = open('./log/getLiu_' + date + '.log', 'a')
-  print 'to get New'
+  #print 'to get New'
   weibo = getNewWeibo(sendedLst)
   curtime = time.strftime('%H:%M:%S',time.localtime(time.time()))
-  print 'get new Ok: ' + weibo + ' ' + curtime
+  #print 'get new Ok: ' + weibo + ' ' + curtime
   logfile.write('get New ok!' + curtime + '\n')
   if len(weibo) > 0 :
-    print 'New weibo: ' + weibo
+    #print 'New weibo: ' + weibo
     logfile.write('New weibo :' + weibo + '\n' + date + ' ' + curtime + '\n')
-    sendLiu.send('大刘微博直播', weibo) 
+    rpos = 20
+    if len(weibo) < 20 :
+      rpos = len(weibo)
+    sendLiu.send( weibo[:rpos] + '...', weibo) 
   else :
     logfile.write('None!\n' + date + ' ' + curtime + '\n')
-    print 'None'
+    #print 'None'
   logfile.close()
   #time.sleep(3)
 

@@ -9,6 +9,8 @@ import getTodayUrl
 startLiuHour = 7
 stopLiuHour = 19
 startWuHour = 9
+midWuHour = 11
+midWuMinute = 40
 stopWuHour = 15
 stopWuMinute = 10
 
@@ -40,6 +42,7 @@ while True :
     oldLst = list()
     enterWu = False
     wuIsEnd = False
+    wuIsMid = False
 
     while(enterLiu) :
       getLiu.runOnce(liuSendedLst, date)
@@ -56,7 +59,7 @@ while True :
       if h == startWuHour and enterWu is False :
         enterWu = True
         logFile.write('\n\n\nEnterWu\n\n')
-        sendWu.informMyself('开始wu2198')
+        #sendWu.informMyself('开始wu2198')
       #print '1'
       logFile.write('1\n')
       if enterWu :
@@ -64,7 +67,10 @@ while True :
         time.sleep(3)
       #print '2'
       logFile.write('2\n')
-      if h == stopWuHour and m == stopWuMinute and not wuIsEnd:
+      if not wuIsMid and h == midWuHour and m == midWuMinute :
+        getWu.runEnd(url)
+        wuIsMid = True
+      if not wuIsEnd and h == stopWuHour and m == stopWuMinute :
         enterWu = False
         getWu.runEnd(url)
         wuIsEnd = True
