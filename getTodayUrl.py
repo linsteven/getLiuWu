@@ -32,7 +32,8 @@ def getUrl() :
   #have found 10 articles
   month = time.localtime().tm_mon
   day = time.localtime().tm_mday
-  title = str(month) +'月' + str(day) + '日即时' 
+  title = str(month) +'月' + str(day) + '日' 
+  #print title
   goodline = ''
   flag = False
   for k in range(0, 20) :

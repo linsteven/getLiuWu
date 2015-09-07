@@ -7,7 +7,7 @@ import getTodayUrl
 
 
 startLiuHour = 7
-stopLiuHour = 19
+stopLiuHour = 21
 startWuHour = 9
 midWuHour = 11
 midWuMinute = 40
@@ -59,7 +59,7 @@ while True :
       if h == startWuHour and enterWu is False :
         enterWu = True
         logFile.write('\n\n\nEnterWu\n\n')
-        #sendWu.informMyself('开始wu2198')
+        sendWu.informMyself('开始wu2198')
       #print '1'
       logFile.write('1\n')
       if enterWu :

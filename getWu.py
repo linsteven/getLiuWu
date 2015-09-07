@@ -126,21 +126,22 @@ def runEnd(url):
   newLst = getMesg(url)
   sendEmail(newLst)
 
-def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
+def runOnce(url, date, wuSendedLst, latestDeal , oldLst ) :
   if url == '':
     return
   logFile = open('./log/getWu_' + date + '.log', 'a')
- #print 'to getmesg'
   newLst = getMesg(url)
- #print 'get ok'
   if len(newLst) > len(oldLst) :
     oldLen = len(oldLst)
     newLen = len(newLst)
-    oldLst = newLst
+    for kk in range(oldLen,newLen) :
+      oldLst.append(newLst[kk])
+    #oldLst = newLst
     getNew = False
     subject = 'wu2198直播更新'
-    for i in range(oldLen-1, newLen-1) :
+    for i in range(oldLen, newLen) :
       #mesg = newLst[i]
+      #print newLst[i]
       #if isDeal(mesg) and mesg not in wuSendedLst : 
       #  #can get the deal as soon as possible
       #  getNew = True
@@ -172,10 +173,9 @@ def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
           ops = newLst[linenum].split(' ')
           if len(ops) > 1 :
             subject = ops[1]
-        break
+            sendEmail( oldLst, latestDeal, ops[1])
+        #break
 
-    #if getNew :
-      #sendEmail( oldLst, latestDeal, ops[1])
 
   #diff = 0
   #if latestDeal != '暂无' :
@@ -197,8 +197,8 @@ def runOnce(url, date, wuSendedLst, latestDeal = '暂无', oldLst = list()) :
   
 
 def run():
-  #url = getTodayUrl.getUrl()  #url of wu's blog
-  url = 'http://blog.sina.com.cn/s/blog_48874cec0102vwv6.html'
+  url = getTodayUrl.getUrl()  #url of wu's blog
+  #url = 'http://blog.sina.com.cn/s/blog_48874cec0102vwv6.html'
   if url == '' :
     return
   latestDeal = '暂无'
