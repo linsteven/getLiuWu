@@ -37,7 +37,7 @@ def getMesg(url) :
   divCount = 0
   for line in lines :
     #if line == '</DIV>' : divCount += 1
-    if findStart == False and line.startswith('<div>9') :
+    if findStart == False and line.startswith('<p>') :
       findStart = True
       start = count
     if findEnd == False and ('<!-- 正文结束 -->' in line ) : #line.startswith('<div>15') :
@@ -81,10 +81,12 @@ def isDeal(line) :
 
 def sendEmail(newLst, latestDeal = '', subject = '今日及时分析_wu2198') :
   content = ''
-  if subject == '今日及时分析_wu2198' :
-    content = '今日分析:\n'
-  else :
-    content = '新交易：' + latestDeal + ' \n\n' + '及时分析: ' + '\n' 
+  if subject == '上午直播_wu2198' :
+    content = '上午分析:\n\n'
+  elif subject == '今日直播_wu2198' :
+    content = '今日分析:\n\n'
+  else:
+    content = '新交易：' + latestDeal + ' \n\n' + '及时分析: ' + '\n\n' 
   for line in newLst :
     line = line.replace(' ', '  ') #扩大时间和内容间距离
     content += line + '\n\n'
@@ -124,7 +126,11 @@ def runEnd(url):
   if url == '' :
     return
   newLst = getMesg(url)
-  sendEmail(newLst)
+  h = time.localtime().tm_hour
+  if h == 11 :
+    sendEmail(newLst,'', '上午直播_wu2198')
+  else :
+    sendEmail(newLst,'', '今日直播_wu2198')
 
 def runOnce(url, date, wuSendedLst, latestDeal , oldLst ) :
   if url == '':
@@ -173,7 +179,7 @@ def runOnce(url, date, wuSendedLst, latestDeal , oldLst ) :
           ops = newLst[linenum].split(' ')
           if len(ops) > 1 :
             subject = ops[1]
-            sendEmail( oldLst, latestDeal, ops[1])
+            sendEmail( newLst, latestDeal, ops[1])
         #break
 
 
@@ -197,8 +203,8 @@ def runOnce(url, date, wuSendedLst, latestDeal , oldLst ) :
   
 
 def run():
-  url = getTodayUrl.getUrl()  #url of wu's blog
-  #url = 'http://blog.sina.com.cn/s/blog_48874cec0102vwv6.html'
+  #url = getTodayUrl.getUrl()  #url of wu's blog
+  url = 'http://blog.sina.com.cn/s/blog_48874cec0102vx4s.html'
   if url == '' :
     return
   latestDeal = '暂无'

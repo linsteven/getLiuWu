@@ -20,12 +20,13 @@ def send(strSubject, content, opt = ''):
   username = base64.encodestring(username).strip() 
   password = base64.encodestring(password).strip() 
   date = time.strftime('%Y%m%d', time.localtime(time.time()))
-  userFile = open('userlistTest.txt','r')
-  #userFile = open('userlistWu.txt','r')
+  #userFile = open('userlistTest.txt','r')
+  userFile = open('userlistWu.txt','r')
   mesg = '\nWu news\n\n'
   emails = userFile.readlines()
   userFile.close()
   logFile = open('./log/sendemail_' + date +'.log','a') #write only ,append
+  logFile.write('Send Content: \n' + content + '\n')
   mesg += '\n\n' + time.strftime("%a, %d %b %Y %H:%M:%S ", time.localtime())
   smtp = smtplib.SMTP()
   #print 'try connect'
