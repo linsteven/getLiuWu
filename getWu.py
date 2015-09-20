@@ -13,11 +13,8 @@ def getMesg(url) :
   html = ''
   lst = list()
   try :
-   #print 'wuget 1'
     page = urllib.urlopen(url)
-   #print 'wuget 2'
     html = page.read()
-   #print 'wuget 3'
   except IOError,e :
     errno,errstr = sys.exc_info()[:2]
     logfile = open('./log/getWu_error.log', 'a')
@@ -137,35 +134,16 @@ def runOnce(url, date, wuSendedLst, latestDeal , oldLst ) :
     return
   logFile = open('./log/getWu_' + date + '.log', 'a')
   newLst = getMesg(url)
-  if len(newLst) > len(oldLst) :
-    oldLen = len(oldLst)
+  if True: #len(newLst) > len(oldLst) :
     newLen = len(newLst)
-    for kk in range(oldLen,newLen) :
-      oldLst.append(newLst[kk])
-    #oldLst = newLst
     getNew = False
-    subject = 'wu2198直播更新'
-    for i in range(oldLen, newLen) :
-      #mesg = newLst[i]
-      #print newLst[i]
-      #if isDeal(mesg) and mesg not in wuSendedLst : 
-      #  #can get the deal as soon as possible
-      #  getNew = True
-      #  latestDeal = mesg
-      #  wuSendedLst.append(mesg)
-      #  sendedFile = open('./tmp/sendedWu_' + date + '.txt','a')
-      #  sendedFile.write(mesg + '\n')
-      #  sendedFile.close()
-      #  logFile.write('New deal: ' + mesg + '\n')
-      #  ops = latestDeal.split(' ')
-      #  if len(ops) > 1 :
-      #    subject = ops[1]
-      #  #break
+    for i in range(0, newLen) :
       if '目前中短线仓位' in newLst[i] :
         linenum = 0 
         #if several deals occur at the same time, set the subject be the last deal
         latestDeal = ''
         for j in range(i-3,i) :
+          logFile.write(newLst[j] + '\n')
           if re.match(r"^.*\d{1,2}%", newLst[j]) and newLst[j] not in wuSendedLst:
             linenum = j
             getNew = True
@@ -175,29 +153,16 @@ def runOnce(url, date, wuSendedLst, latestDeal , oldLst ) :
             sendedFile.write(newLst[j] + '\n')
             sendedFile.close()
             logFile.write('New deal: ' + newLst[j] + '\n')
+        logFile.write('linenum = ' + str(linenum) + '\n')
         if linenum != 0 :
           ops = newLst[linenum].split(' ')
           if len(ops) > 1 :
             subject = ops[1]
             sendEmail( newLst, latestDeal, ops[1])
-        #break
 
-
-  #diff = 0
-  #if latestDeal != '暂无' :
-  #  strs = latestDeal.split(' ')
-  #  times = strs[0].split(':')
-  #  hour =  time.localtime().tm_hour
-  #  minute = time.localtime().tm_min
-  #  diff = 50
-  #  #diff = hour * 60 + minute - int(times[0]) * 60 - int(times[1])
-  #if diff > 30 :
-  #  latestDeal = '暂无' #only show the deal in 30 minutes
-  #refresh time
   refreshTime =  "\n更新时间: " + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
   logFile.write(refreshTime + '')
   logFile.write('-----------------\n')
-  #time.sleep(10)
   #output(newLst, wuSendedLst, latestDeal, refreshTime) 
   logFile.close()
   

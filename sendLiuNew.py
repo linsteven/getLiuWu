@@ -13,30 +13,29 @@ def send(strSubject, content, opt = ''):
 #strSubject = '测试邮件功能'
 #content = 'this is a test'
 #if True :
-  sender = 'linsgrabstock@yeah.net'
+  sender = 'liustock@yeah.net'
   smtpserver = 'smtp.yeah.net'
-  username = 'linsgrabstock@yeah.net'
-  password = 'uaofqmfwovizdyvg'
+  username = 'liustock@yeah.net'
+  password = 'xdkftzkdmtofwlkf'
   username = base64.encodestring(username).strip() 
   password = base64.encodestring(password).strip() 
   date = time.strftime('%Y%m%d', time.localtime(time.time()))
   #userFile = open('userlistTest.txt','r')
-  userFile = open('userlistWu.txt','r')
-  mesg = '\nWu news\n\n'
+  userFile = open('userlistLiu.txt','r')
   emails = userFile.readlines()
   userFile.close()
   logFile = open('./log/sendemail_' + date +'.log','a') #write only ,append
-  logFile.write('\n\n-------------------\n Wu Send Content: \n' + content + '\n')
-  mesg += '\n\n' + time.strftime("%a, %d %b %Y %H:%M:%S ", time.localtime())
+  logFile.write('\n\n-------------------\n Liu Send Content: \n' + content + '\n')
+  mesg = '\n' + time.strftime("%a, %d %b %Y %H:%M:%S ", time.localtime())
   smtp = smtplib.SMTP()
   #print 'try connect'
   try :
     smtp.connect("smtp.yeah.net: 25")
-    mesg += '\n' + str(smtp.docmd('helo', 'linsgrabstock@yeah.net') ) 
+    mesg += '\n\n' + str(smtp.docmd('helo', 'liustock@yeah.net') ) 
     mesg += '\n' + str(smtp.docmd('auth login'))
     mesg += '\n' + str(smtp.docmd(username))
     mesg += '\n' + str(smtp.docmd(password))
-    mesg += '\n' + str(smtp.docmd('mail from:','<linsgrabstock@yeah.net>'))
+    mesg += '\n' + str(smtp.docmd('mail from:','<liustock@yeah.net>'))
     if len(opt) == 0:
       for usermail in emails :
         usermail = usermail.strip()
@@ -50,7 +49,7 @@ def send(strSubject, content, opt = ''):
       mesg +=  '\n' + str(smtp.docmd('rcpt to:', usermail))
       mesg += '\n' + 'send to ' + usermail 
     mesg += '\n' + str(smtp.docmd('data'))
-    mesg += '\n' + str(smtp.docmd('from: linsgrabstock@yeah.net\r\n' + 
+    mesg += '\n' + str(smtp.docmd('from: liustock@yeah.net\r\n' + 
     'to: receiver@qq.com\r\n' + 
     'subject: ' + strSubject + '\r\n\r\n' + 
     #'subject: mail theme\r\n\r\n' + 
@@ -69,15 +68,13 @@ def send(strSubject, content, opt = ''):
     logFile.close()
     return False
 
-def informMyself(mesg) :
-  send(mesg, mesg, 'send to myself')
 
 def test() : #testAmount
   count = 0
   #while True :
   if True :
     send('大刘微博更新以及wu交易提醒','如果您收到，明天应该就能收到大刘更新及wu交易提醒邮件了。谢谢')
-    count += 1
+    #count += 1
     #if count >100 :
      # break
     #print 'count = ' + str(count)

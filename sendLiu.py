@@ -23,7 +23,7 @@ def send(strSubject, content) :
   #userFile = open('userlist.txt','r')
   emails = userFile.readlines()
   logFile = open('./log/sendemail_' + date +'.log','a') #write only ,append
-  logFile.write('Send Content: \n' + content + '\n')
+  logFile.write('\n\n-----------------\nLiu Send Content: \n' + content + '\n')
   mesg = '\n\n' + time.strftime("%a, %d %b %Y %H:%M:%S ", time.localtime())
   smtp = smtplib.SMTP()
   #print 'try connect'
