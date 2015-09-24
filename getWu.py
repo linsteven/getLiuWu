@@ -161,6 +161,7 @@ def runOnce(url, date, wuSendedLst, latestDeal , oldLst ) :
             sendEmail( newLst, latestDeal, ops[1])
 
   refreshTime =  "\n更新时间: " + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+  print refreshTime
   logFile.write(refreshTime + '')
   logFile.write('-----------------\n')
   #output(newLst, wuSendedLst, latestDeal, refreshTime) 

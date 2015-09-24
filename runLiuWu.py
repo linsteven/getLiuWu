@@ -43,10 +43,6 @@ while True :
 
     while(enterLiu) :
       getLiu.runOnce(liuSendedLst, date)
-      if enterWu :
-        time.sleep(3)
-      else :
-        time.sleep(8)
       h = time.localtime().tm_hour
       m = time.localtime().tm_min
       logFile = open('./log/getBoth_' + date + '.log','a')
@@ -57,7 +53,6 @@ while True :
         sendWu.informMyself('开始wu2198')
       if enterWu :
         getWu.runOnce(url, date, wuSendedLst, latestDeal, oldLst)
-        time.sleep(3)
       if not wuIsMid and h == midWuHour and m == midWuMinute :
         getWu.runEnd(url)
         wuIsMid = True
@@ -70,11 +65,6 @@ while True :
         enterLiu = False
         sendWu.informMyself('结束大刘')
       logFile.close()
-    
+
   time.sleep(300)
 
-#sendedLst = getLiu.init()
-#while(True) :
-#  getLiu.runOnce(sendedLst)
-#  time.sleep(5)
- # print 'one cycle'

@@ -10,13 +10,12 @@ from email.header import Header
 
 
 def send(strSubject, content, opt = ''):
-#strSubject = '测试邮件功能'
-#content = 'this is a test'
-#if True :
   sender = 'linsgrabstock@yeah.net'
   smtpserver = 'smtp.yeah.net'
   username = 'linsgrabstock@yeah.net'
-  password = 'uaofqmfwovizdyvg'
+  pwdFile = open('pwdWu.txt', 'r')
+  password = pwdFile.readline().strip()
+  pwdFile.close()
   username = base64.encodestring(username).strip() 
   password = base64.encodestring(password).strip() 
   date = time.strftime('%Y%m%d', time.localtime(time.time()))
@@ -29,7 +28,6 @@ def send(strSubject, content, opt = ''):
   logFile.write('\n\n-------------------\n Wu Send Content: \n' + content + '\n')
   mesg += '\n\n' + time.strftime("%a, %d %b %Y %H:%M:%S ", time.localtime())
   smtp = smtplib.SMTP()
-  #print 'try connect'
   try :
     smtp.connect("smtp.yeah.net: 25")
     mesg += '\n' + str(smtp.docmd('helo', 'linsgrabstock@yeah.net') ) 
@@ -41,7 +39,6 @@ def send(strSubject, content, opt = ''):
       for usermail in emails :
         usermail = usermail.strip()
         #if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$",  email) != None :
-        #  rint 'yes'
         usermail = '<' + usermail + '>'
         mesg += '\n' + str(smtp.docmd('rcpt to:', usermail))
         mesg += '\n' + 'send to ' + usermail 
@@ -78,12 +75,6 @@ def test() : #testAmount
   if True :
     send('大刘微博更新以及wu交易提醒','如果您收到，明天应该就能收到大刘更新及wu交易提醒邮件了。谢谢')
     count += 1
-    #if count >100 :
-     # break
-    #print 'count = ' + str(count)
-    #print time.localtime().tm_hour, ':', time.localtime().tm_min
-    #print '\n\n'
-    #time.sleep(random.randint(5,20))
 
 #test()
 

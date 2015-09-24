@@ -4,7 +4,7 @@ import urllib
 import re
 import time
 import codecs
-import sendLiuNew
+import sendLiu
 import socket
 
 #getHtml(url) 获取url对应的网页内容
@@ -199,7 +199,9 @@ def runOnce(sendedLst, date) :
     rpos = 40
     if len(weibo) < 40 :
       rpos = len(weibo)
-    sendLiuNew.send( weibo[11:rpos] + '...', weibo) 
+    logfile.write('new1')
+    sendLiu.send( '刘鹏程SaiL直播更新', weibo) 
+    logfile.write('\nafter send email\n')
   else :
     logfile.write('None!\n' + date + ' ' + curtime + '\n')
   logfile.close()
